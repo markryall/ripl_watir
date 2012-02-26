@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "ripl/watir/version"
+require "ripl_watir/version"
 
 Gem::Specification.new do |s|
   s.name        = "ripl-watir"
-  s.version     = Ripl::Watir::VERSION
+  s.version     = RiplWatir::VERSION
   s.authors     = ["Mark Ryall"]
   s.email       = ["mark@ryall.name"]
   s.homepage    = ""
