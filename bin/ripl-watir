@@ -1,4 +1,3 @@
 #!/usr/bin/env ruby
-
-require 'ripl'
-Ripl.start
+$: << File.dirname(__FILE__)+'/../lib'
+require 'ripl-watir'
