@@ -7,9 +7,12 @@ Gem::Specification.new do |s|
   s.version     = RiplWatir::VERSION
   s.authors     = ["Mark Ryall"]
   s.email       = ["mark@ryall.name"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/markryall/ripl_watir"
+  s.summary     = %q{watir repl for efficiently creating page objects}
+  s.description = <<EOF
+A ripl plugin to provide an interactive shell for creating page objects
+to build an automated testing infrastructure for a site.
+EOF
 
   s.rubyforge_project = "ripl-watir"
 
