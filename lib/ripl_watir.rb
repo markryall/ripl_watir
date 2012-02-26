@@ -1,4 +1,3 @@
-require 'ripl'
 require 'watir-webdriver'
 require 'ripl_watir/page'
 
@@ -15,7 +14,7 @@ module RiplWatir
 
   module Commands
     def classify s
-      s.split('_').map(&:capitalize).join
+      s.to_s.split('_').map(&:capitalize).join
     end
 
     def page_class *args
@@ -23,18 +22,23 @@ module RiplWatir
       require "ripl_watir/#{args.join '/'}"
       mod = RiplWatir
       args.each do |name|
-        mod = mod.const_get classify(name)
+        mod = mod.const_get classify name
       end
       page.extend mod
       page
     end
 
     def on_page *args
-      Page.new Ripl::Watir.browser
+      page_class(*args).tap do |p|
+        yield p if block_given?
+      end
     end
 
     def visit_page *args
-      Page.new Ripl::Watir.browser
+      on_page(*args) do |p|
+        p.goto
+        yield p if block_given?
+      end
     end
   end
 end
