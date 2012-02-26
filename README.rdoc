@@ -1,9 +1,8 @@
 == Description
 
-Experimental ripl shell for incremental development of page objects
-for creating an automation testing infrastructure for a web site.
-Manual testing of the site may then be performed with cybernetic
-superpowers.
+Experimental ripl shell for incremental development of an automation
+testing infrastructure for a web site.  Manual testing of the site
+may then be performed with bionic superpowers.
 
 == Installation
 
@@ -11,22 +10,65 @@ superpowers.
 
 == Demonstration
 
-The best explanation is a demonstration:
+Hopefully this serves as some kind of demonstration:
 
+    cd /tmp
+    mkdir lib
     ripl watir
 
-... opens a browser session (firefox by default) and enter a
+... opens a browser session (firefox by default) and enters a
 ripl console shell.
 
-    >> p = visit_page :github, :home
+    $: << 'lib'
 
-... creates an instance of the RiplWatir::Page class, requires 'ripl_watir/github/home' (from whereever it happens to be on the load
-path), mixes RiplWatir::Github::Home into the page class and calls the
+... add the 'lib' directory to the load path
+
+Now create a file 'lib/ripl_watir/github.rb' containing the following:
+
+    require 'watir-page-helper'
+
+    module RiplWatir::Github
+      extend WatirPageHelper::ClassMethods
+
+      direct_url 'github.com'
+      link :login, text: 'Login'
+
+      def logged_in?
+        browser.div(id: 'user').exists?
+      end
+    end
+
+... and now be amazed:
+
+    >> p = visit_page :github
+
+... this creates an instance of the RiplWatir::Page class, requires 'ripl_watir/github' (from whereever it happens to be on the load
+path), mixes RiplWatir::Github into the page class and calls the
 goto method (which tells the browser to goto github.com).
 
     >> p.login
 
 ... calls the login method on the page (which clicks the login button).
+
+Now create a file 'lib/ripl_watir/github/login.rb' containing the following:
+
+    require 'watir-page-helper'
+
+    module RiplWatir::Github::Login
+      extend WatirPageHelper::ClassMethods
+
+      text_field :email, id: 'login_field'
+      text_field :password, id: 'password'
+      button :submit, value: 'Log in'
+
+      def login email, password
+        self.email = email
+        self.password = password
+        self.submit
+      end
+    end
+
+... and be further amazed:
 
     >> on_page(:github, :login) do |login_page|
     |    login_page.login 'me@my.mail.com', 'password'
@@ -36,17 +78,16 @@ goto method (which tells the browser to goto github.com).
 'ripl_watir/github/home' (from whereever it happens to be on the load
 path), mixes RiplWatir::Github::Login into it and yields to the block.
 
-The main purpose of this is to be able to modify/define page mixins,
+The main purpose of all this is to be able to modify/define page mixins,
 and reload them all without having to restart the console or create a
 new browser session.
 
 If for example, you added a new page mixin or a new method to an already instantiated one, you can simply reload the class and should find the new method is available.
 
-    >> load 'ripl_watir/github/logout'
-    >> p = on_page :github, :logout
+    >> load 'ripl_watir/github/login'
 
 If the page mixin you've created has not been loaded already, this step
-is not necessary since the page mixins are required on first use.
+is not necessary since the page mixins are only required on first use.
 
 If you just want to tell the browser to do something, it is directly
 available as 'browser' without needing a page object.
@@ -66,9 +107,13 @@ These page mixins will be loaded from anywhere on the load path.
 
 == Cucumber
 
-To use this approach with cucumber, define your page objects in a
-'lib' (make sure this directory is on the load path) and mix the
-commands into the cucumber 'world' in env.rb:
+To use page mixins defined in this way with cucumber, define your
+page objects in a 'lib' (make sure this directory is on the load path)
+and mix the commands into the cucumber 'world' in env.rb:
 
     require 'ripl_watir/'
     World RiplWatir::Commands
+
+As long as your page mixins are in a 'ripl_watir' directory on the path
+and are constants defined (at any depth) under the RiplWatir module, they
+should be located.
