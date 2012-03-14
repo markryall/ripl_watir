@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-$: << File.dirname(__FILE__)+'/../lib'
 require 'ripl'
-require 'ripl_watir'
-Ripl::Commands.include RiplWatir::Commands
-browser = RiplWatir.browser = ::Watir::Browser.new
+require 'watir-page-helper/commands'
+Ripl::Commands.include WatirPageHelper::Commands
+browser = WatirPageHelper.create
+puts "'browser' has started and is now available to control: see http://bit.ly/ripl-watir for more details."
 Ripl.start :binding => binding
