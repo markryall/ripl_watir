@@ -65,7 +65,7 @@ Now create a file 'lib/pages/github/login.rb' containing the following:
 
 ... and be further amazed:
 
-    >> on(:github, :login).login 'me@my.mail.com', 'password'
+    >> on_page(:github, :login).login 'me@my.mail.com', 'password'
 
 ... creates another instance of the Pages::Page class, reloads
 'pages/github/login.rb' (from whereever it happens to be on the load
