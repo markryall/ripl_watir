@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << File.dirname(__FILE__)+'/../lib'
 require 'ripl'
 require 'ripl_watir'
 include RiplWatir::Commands
-browser = RiplWatir.browser = ::Watir::Browser.new
+browser = RiplWatir.create
 Ripl.start binding: binding
