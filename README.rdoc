@@ -8,7 +8,7 @@ may then be performed with bionic superpowers.
 
     gem install ripl_watir
 
-== Demonstration
+== Usage
 
 Hopefully this serves as some kind of demonstration:
 
@@ -23,71 +23,59 @@ ripl console shell.
 
 ... add the 'lib' directory to the load path
 
-Now create a file 'lib/ripl_watir/github.rb' containing the following:
+Now create a file 'lib/pages/github.rb' containing the following:
 
-    require 'watir-page-helper'
-
-    module RiplWatir::Github
-      extend WatirPageHelper::ClassMethods
-
-      direct_url 'github.com'
-      link :login, text: 'Login'
-
-      def logged_in?
-        browser.div(id: 'user').exists?
+    module Pages::Github
+      def goto
+        browser.goto 'github.com'
       end
     end
 
 ... and now be amazed:
 
-    >> p = visit_page :github
+    >> visit_page :github
 
-... this creates an instance of the RiplWatir::Page class, requires 'ripl_watir/github' (from whereever it happens to be on the load
-path), mixes RiplWatir::Github into the page class and calls the
-goto method (which tells the browser to goto github.com).
+... this creates an instance of the Pages::Page class, loads 'pages/github' (from whereever it happens to be on the load
+path), mixes Pages::Github into the page class and calls the
+goto method (which tells the browser to goto github.com).  Amazing?
 
-    >> p.login
+Now edit the 'lib/pages/github.rb' file to add this method:
 
-... calls the login method on the page (which clicks the login button).
+    module Pages::Github
+      def login
+        browser.link(text: 'Sign in').click
+      end
+    ...
 
-Now create a file 'lib/ripl_watir/github/login.rb' containing the following:
+... and back in the ripl session:
 
-    require 'watir-page-helper'
+    >> on_page(:github).login
 
-    module RiplWatir::Github::Login
-      extend WatirPageHelper::ClassMethods
+This reloads the github page and calls the login method on the page (which clicks the login button).
 
-      text_field :email, id: 'login_field'
-      text_field :password, id: 'password'
-      button :submit, value: 'Log in'
+Now create a file 'lib/pages/github/login.rb' containing the following:
 
+    module Pages::Github::Login
       def login email, password
-        self.email = email
-        self.password = password
-        self.submit
+        browser.text_field(id: 'login_field').set email
+        browser.text_field(id: 'password').set password
+        browser.button(value: 'Sign in').click
       end
     end
 
 ... and be further amazed:
 
-    >> on_page(:github, :login) do |login_page|
-    |    login_page.login 'me@my.mail.com', 'password'
-    |  end
+    >> on(:github, :login).login 'me@my.mail.com', 'password'
 
-... creates another instance of the RiplWatir::Page class, requires
-'ripl_watir/github/home' (from whereever it happens to be on the load
-path), mixes RiplWatir::Github::Login into it and yields to the block.
+... creates another instance of the Pages::Page class, reloads
+'pages/github/login.rb' (from whereever it happens to be on the load
+path) and mixes Pages::Github::Login into it.
 
 The main purpose of all this is to be able to modify/define page mixins,
 and reload them all without having to restart the console or create a
 new browser session.
 
-If for example, you added a new page mixin or a new method to an already instantiated one, you can simply reload the class and should find the new method is available.
-
-    >> load 'ripl_watir/github/login'
-
-If the page mixin you've created has not been loaded already, this step
-is not necessary since the page mixins are only required on first use.
+If for example, you added a new page mixin or a new method to an already instantiated one, you should find the new method is immediately available.
 
 If you just want to tell the browser to do something, it is directly
 available as 'browser' without needing a page object.
@@ -96,12 +84,12 @@ available as 'browser' without needing a page object.
 
 == Page Objects
 
-At this time, the page objects are always a RiplWatir::Page instance
+The page objects are always a Pages::Page instance
 (which is a delegate of Watir::Browser) with a specified mixin.
 
-This mixin can add methods specifically for interacting with that page.
-The watir-page-helper mixin may be used as in the github examples in this gem but is not mandatory.  You can just define methods
-against the @browser instance varaible or delegate to the page itself.
+This mixins add methods specifically for interacting with that particular page.
+
+You can just define methods against the browser instance varaible or delegate to the page itself.
 
 These page mixins will be loaded from anywhere on the load path.
 
@@ -111,9 +99,9 @@ To use page mixins defined in this way with cucumber, define your
 page objects in a 'lib' (make sure this directory is on the load path)
 and mix the commands into the cucumber 'world' in env.rb:
 
-    require 'ripl_watir/'
+    require 'ripl_watir'
     World RiplWatir::Commands
 
-As long as your page mixins are in a 'ripl_watir' directory on the path
+As long as your page mixins are in a 'pages' directory on the path
 and are constants defined (at any depth) under the RiplWatir module, they
-should be located.
+should be successfully located.

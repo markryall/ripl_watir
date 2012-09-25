@@ -22,7 +22,7 @@ EOF
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "ripl"
-  s.add_runtime_dependency "watir-page-helper"
+  s.add_runtime_dependency "watir-webdriver"
 
   s.add_development_dependency "rspec"
 end

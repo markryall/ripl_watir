@@ -19,8 +19,8 @@ module RiplWatir
 
     def page_class *args
       page = Page.new RiplWatir.browser
-      require "ripl_watir/#{args.join '/'}"
-      mod = RiplWatir
+      load "pages/#{args.join '/'}.rb"
+      mod = Pages
       args.each do |name|
         mod = mod.const_get classify name
       end
