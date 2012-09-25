@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "ripl_watir/version"
 
 Gem::Specification.new do |s|
   s.name        = "ripl-watir"
-  s.version     = RiplWatir::VERSION
+  s.version     = '0.0.2'
   s.authors     = ["Mark Ryall"]
   s.email       = ["mark@ryall.name"]
   s.homepage    = "https://github.com/markryall/ripl_watir"
@@ -24,5 +23,5 @@ EOF
   s.add_runtime_dependency "ripl"
   s.add_runtime_dependency "watir-webdriver"
 
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rake"
 end
