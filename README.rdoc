@@ -19,10 +19,6 @@ Hopefully this serves as some kind of demonstration:
 ... opens a browser session (firefox by default) and enters a
 ripl console shell.
 
-    $: << 'lib'
-
-... add the 'lib' directory to the load path
-
 Now create a file 'lib/pages/github.rb' containing the following:
 
     module Pages::Github
@@ -35,7 +31,7 @@ Now create a file 'lib/pages/github.rb' containing the following:
 
     >> visit_page :github
 
-... this creates an instance of the Pages::Page class, loads 'pages/github' (from whereever it happens to be on the load
+... this creates an instance of the RiplWatir::Page class, loads 'pages/github' (from whereever it happens to be on the load
 path), mixes Pages::Github into the page class and calls the
 goto method (which tells the browser to goto github.com).  Amazing?
 
@@ -67,7 +63,7 @@ Now create a file 'lib/pages/github/login.rb' containing the following:
 
     >> on_page(:github, :login).login 'me@my.mail.com', 'password'
 
-... creates another instance of the Pages::Page class, reloads
+... creates another instance of the RiplWatir::Page class, reloads
 'pages/github/login.rb' (from whereever it happens to be on the load
 path) and mixes Pages::Github::Login into it.
 
@@ -84,7 +80,7 @@ available as 'browser' without needing a page object.
 
 == Page Objects
 
-The page objects are always a Pages::Page instance
+The page objects are always a RiplWatir::Page instance
 (which is a delegate of Watir::Browser) with a specified mixin.
 
 This mixins add methods specifically for interacting with that particular page.

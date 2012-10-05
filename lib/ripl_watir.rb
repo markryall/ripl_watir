@@ -1,18 +1,7 @@
 require 'watir-webdriver'
-require 'watir-webdriver'
 require 'forwardable'
 
 module Pages
-  class Page
-    attr_reader :browser
-    extend Forwardable
-
-    def_delegators :@browser, :title, :url, :html, :status, :refresh, :back
-
-    def initialize browser
-      @browser = browser
-    end
-  end
 end
 
 module RiplWatir
@@ -24,13 +13,24 @@ module RiplWatir
     end
   end
 
+  class Page
+    attr_reader :browser
+    extend Forwardable
+
+    def_delegators :@browser, :title, :url, :html, :status, :refresh, :back
+
+    def initialize browser
+      @browser = browser
+    end
+  end
+
   module Commands
     def classify s
       s.to_s.split('_').map(&:capitalize).join
     end
 
     def page_class *args
-      page = Pages::Page.new RiplWatir.browser
+      page = RiplWatir::Page.new RiplWatir.browser
       load "pages/#{args.join '/'}.rb"
       mod = Pages
       args.each do |name|

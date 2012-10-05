@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "ripl-watir"
-  s.version     = '0.0.3'
+  s.version     = '0.0.4'
   s.authors     = ["Mark Ryall"]
   s.email       = ["mark@ryall.name"]
   s.homepage    = "https://github.com/markryall/ripl_watir"
