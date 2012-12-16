@@ -11,6 +11,9 @@ Gem::Specification.new do |s|
   s.description = <<EOF
 A ripl plugin to provide an interactive shell for creating page objects
 to build an automated testing infrastructure for a site.
+
+Set environment variable RIPL_WATIR_RELOAD to force reloading of pages each
+time they are used (this is only useful during development).
 EOF
 
   s.rubyforge_project = "ripl-watir"

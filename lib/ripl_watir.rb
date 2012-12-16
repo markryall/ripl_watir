@@ -31,7 +31,11 @@ module RiplWatir
 
     def page_class *args
       page = RiplWatir::Page.new RiplWatir.browser
-      load "pages/#{args.join '/'}.rb"
+      if ENV['RIPL_WATIR_RELOAD']
+        load "pages/#{args.join '/'}.rb"
+      else
+        require "pages/#{args.join '/'}"
+      end
       mod = Pages
       args.each do |name|
         mod = mod.const_get classify name
